@@ -2,8 +2,9 @@ import React , {useState, useEffect, useCallback} from 'react';
 import {Lightbulb, LightbulbOff} from 'lucide-react';
 import {lightService} from './services/lightService';
 import {thermostatService} from './services/thermostatService';
-import {userService} from './services/userService';
 import './App.css'; 
+
+
 
 const LightCard = ({id, brightness, onUpdate, setGlobalError}) => {
   const [isRunning, setIsRunning] = useState(false);
@@ -89,7 +90,7 @@ const ThermostatCard = ({id, temperature, settedTemp, ouUpdate, setGlobalError})
   const [isRunning, setIsRunning] = useState(false);
   const [isConnect, setIsConnect] = useState(false);
   const [temp, setTemp] = useState(temperature);
-  const [targetTemp, setTargetTemp] = useState(settedTemp);
+  const [targetTemp, setTargetTemp] = useState(settedTemp)
 
   const checkStatus = useCallback(async () => {
     const status = await thermostatService.isRunning(id);
@@ -101,8 +102,8 @@ const ThermostatCard = ({id, temperature, settedTemp, ouUpdate, setGlobalError})
     const actual = await thermostatService.getActualTemp(id);
     setTemp(actual);
 
-    const currentTarget = await thermostatService.getSettedTemp(id);
-    setTargetTemp(currentTarget);
+    const settedTemp = await thermostatService.getSettedTemp(id);
+    setTargetTemp(settedTemp);
   }, [id]);
 
   useEffect(() => {
@@ -120,6 +121,7 @@ const ThermostatCard = ({id, temperature, settedTemp, ouUpdate, setGlobalError})
     } catch (err){
       setGlobalError(`Failed to set temperature to ${value}°C`);
     }
+    
   };
 
   const handleAction = async (action) => {
@@ -129,8 +131,9 @@ const ThermostatCard = ({id, temperature, settedTemp, ouUpdate, setGlobalError})
     }catch (err){
       setGlobalError(`Failed to perform ${action}`);
     }
+    
+    
   };
-
   return(
     <div className="card">
       <div className="status-container">
@@ -147,17 +150,16 @@ const ThermostatCard = ({id, temperature, settedTemp, ouUpdate, setGlobalError})
         <div className='temp'></div>
       </div>
       <div className='main'>
-        {/* Safety checks to ensure we don't crash on bad/empty API values */}
-        <h3>Actual temperature: {temp != null && !isNaN(temp) ? Number(temp).toFixed(1) : "0.0"}°C</h3>
+        <h3>Actual temperature: {Number(temp).toFixed(1)}°C</h3>
         <h2> Thermostat {id+1}</h2>
       </div>
       <div className='control-group'>
-        <label>Setted temperature: <strong>{targetTemp != null && !isNaN(targetTemp) ? Number(targetTemp).toFixed(1) : "20.0"}°C</strong></label>
+        <label>Setted temperature: <strong>{Number(targetTemp).toFixed(1)}°C</strong></label>
         <input 
           type='range' 
           min="10" 
           max="30"
-          value={targetTemp != null && !isNaN(targetTemp) ? targetTemp : 20}
+          value={targetTemp}
           onChange={handleTempChange}
           className='slider'>
         </input>
@@ -171,32 +173,23 @@ const ThermostatCard = ({id, temperature, settedTemp, ouUpdate, setGlobalError})
   );
 };
 
+
+
 function App(){
   const [lights, setLights] = useState([]);
   const [thermostats, setThermostats] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [usernameInput, setUsernameInput] = useState("");
-  const [passwordInput, setPasswordInput] = useState("");
-  const [typeInput, setTypeInput] = useState(0);
-  const [isRegisteredInput, setIsRegisteredInput] = useState(false);
-
   const loadData = useCallback(async () => {
     try{
-      const loggedStatus = await userService.isLogged();
-      setIsAuthenticated(loggedStatus);
-
-      if(loggedStatus){
-        const data = await lightService.getAll();
-        const thermoData = await thermostatService.getAll();
-        setLights(data);
-        setThermostats(thermoData);
-      }
+      const data = await lightService.getAll();
+      const thermoData = await thermostatService.getAll();
+      setLights(data);
+      setThermostats(thermoData);
       setError(null);
     } catch (err){
-      setError("Error loading system devices.");
+      setError("Error");
     } finally{
       setIsLoading(false);
     }
@@ -206,160 +199,11 @@ function App(){
     loadData();
   }, [loadData]);
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setError(null);
-    try{
-      await userService.login(usernameInput, passwordInput);
-      setIsAuthenticated(true);
-      setUsernameInput("");
-      setPasswordInput("");
-      loadData();
-    }catch(err){
-      setError("Invalid username or password");  
-    }
-  };
-
-  const handleLogout = async () => {
-    try{
-      await userService.logout();
-      setIsAuthenticated(false);
-      setLights([]);
-      setThermostats([]);
-    }catch (err){
-      setError("Failed due to logout");
-    }
-  };
-
-  const handleRegister = async (e) => {
-    e.preventDefault();
-    setError(null);
-    try{
-      await userService.register(typeInput, usernameInput, passwordInput);
-      setIsRegisteredInput(false);
-      setUsernameInput("");
-      setPasswordInput("");
-      alert("Registration complete! You can now log in.");
-    }catch (err){
-      setError("Registration failed. Account might already exist.");
-    }
-  };
-
   if (isLoading) return <div className="loader">Loading...</div>;
 
-  // VIEW 1: Authenticate Layer (Login or Registration screens)
-  if (!isAuthenticated) {
-    return (
-      <div className="app-container">
-        <header className="header">
-          <h1>NovaHome</h1>
-        </header>
-
-        <div className='login-container'>
-          {isRegisteredInput ? (
-            /* --- REGISTRATION FORM --- */
-            <>
-              <h2>Create Account</h2>
-              <p>Join NovaHome to manage your smart devices.</p>
-
-              {error && <div className='error-banner'>{error}</div>}
-
-              <form onSubmit={handleRegister} className='login-form'>
-                <label style={{ color: '#aaa', textAlign: 'left', fontSize: '14px', marginBottom: '-5px' }}>
-                  Account Type:
-                </label>
-                <select 
-                  value={typeInput} 
-                  onChange={(e) => setTypeInput(Number(e.target.value))}
-                  style={{
-                    padding: '12px',
-                    borderRadius: '6px',
-                    border: '1px solid #333',
-                    background: '#2b2b2b',
-                    color: '#fff',
-                    fontSize: '16px'
-                  }}
-                >
-                  <option value={0}>Standard User</option>
-                  <option value={1}>Administrator</option>
-                </select>
-
-                <input
-                  type="text"
-                  placeholder="Choose Username"
-                  value={usernameInput}
-                  onChange={(e) => setUsernameInput(e.target.value)}
-                  required
-                />
-                <input 
-                  type="password"
-                  placeholder="Choose Password"
-                  value={passwordInput}
-                  onChange={(e) => setPasswordInput(e.target.value)}
-                  required
-                />
-                <button type='submit' className="btn-primary">Register</button>
-              </form>
-
-              <p style={{ marginTop: '20px', fontSize: '14px', color: '#aaa' }}>
-                Already have an account?{' '}
-                <span 
-                  style={{ color: '#007bff', cursor: 'pointer', textDecoration: 'underline' }}
-                  onClick={() => { setIsRegisteredInput(false); setError(null); }}
-                >
-                  Sign In
-                </span>
-              </p>
-            </>
-          ) : (
-            /* --- LOGIN FORM --- */
-            <>
-              <h2>Welcome Back</h2>
-              <p>Please log in to access your smart home devices.</p>
-
-              {error && <div className='error-banner'>{error}</div>}
-
-              <form onSubmit={handleLogin} className='login-form'>
-                <input
-                  type="text"
-                  placeholder="Username"
-                  value={usernameInput}
-                  onChange={(e) => setUsernameInput(e.target.value)}
-                  required
-                />
-                <input 
-                  type="password"
-                  placeholder="Password"
-                  value={passwordInput}
-                  onChange={(e) => setPasswordInput(e.target.value)}
-                  required
-                />
-                <button type='submit' className="btn-primary">Sign In</button>
-              </form>
-
-              <p style={{ marginTop: '20px', fontSize: '14px', color: '#aaa' }}>
-                Don't have an account yet?{' '}
-                <span 
-                  style={{ color: '#007bff', cursor: 'pointer', textDecoration: 'underline' }}
-                  onClick={() => { setIsRegisteredInput(true); setError(null); }}
-                >
-                  Register here
-                </span>
-              </p>
-            </>
-          )}
-        </div>
-      </div>
-    );
-  }
-
-  // VIEW 2: Dashboard Layer (Only reached when user is authenticated)
   return (
     <div className="app-container">
-      <div className="header-controls" style={{ display: 'flex', justifyContent: 'flex-end', padding: '10px 20px' }}>
-          <button className='btn-logout' onClick={handleLogout}>Log Out</button>
-      </div>
-      <header className="header" style={{ marginTop: '-40px' }}>
+      <header className="header">
         <h1>NovaHome</h1>
       </header>
 
@@ -386,9 +230,9 @@ function App(){
             setGlobalError={setError}
           />
         ))}
+        
       </main>
     </div>
   );
 }
-
 export default App;
