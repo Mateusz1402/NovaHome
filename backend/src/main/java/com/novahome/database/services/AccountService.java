@@ -20,12 +20,12 @@ public class AccountService {
     }
 
     //Inserting new row
-    public Account insertNewAccount(byte type, String name, String password){
+    public void insertNewAccount(byte type, String name, String password){
         Account newAccount = new Account();
         newAccount.setAccountType(type);
         newAccount.setAccountName(name);
         newAccount.setAccountPass(password);
-        return accountInterface.save(newAccount);
+        accountInterface.save(newAccount);
     }
 
     public boolean loginValidation(String name, String pass){

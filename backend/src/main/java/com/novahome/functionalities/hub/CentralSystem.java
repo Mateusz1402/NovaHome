@@ -164,6 +164,20 @@ public class CentralSystem {
         return thermostats.size();
     }
 
+    public void login(String name, String pass){
+        this.user.login(name, pass);
+    }
 
+    public void logout(){
+        this.user.logout();
+    }
+
+    public boolean getLoginStatus(){
+        return this.user.getLogged();
+    }
+
+    public void register(byte type, String name, String pass){
+        this.user.register(type, name, pass);
+    }
 
 }
