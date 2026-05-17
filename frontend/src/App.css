@@ -1,0 +1,170 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+.container {
+  padding: 2rem;
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.grid {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.card {
+  border: 1px solid #ddd;
+  padding: 1.5rem;
+  border-radius: 12px;
+  width: 200px;
+  box-shadow:0 4px 6px rgba(0,0,0,0.1);
+}
+
+.icon-row{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.icon-active {
+  size: 48;
+  color: #fbbf24;
+  filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.6));
+  transition: all 0.3s ease;
+}
+
+.icon-inactive {
+  size: 48;
+  color: #ddd;
+}
+
+input[type="range"]{
+  width: 100%;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.button-group{
+  width: 200px;
+  height: 50px;
+  padding-top: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: top;
+  gap: 10px;
+}
+
+.btn-primary{
+  width: 90px;
+  height: 35px;
+  background-color: #ddd;
+  font-size: 0.85rem;
+  color: black;
+  margin-right: 10px;
+
+}
+.btn-secondary{
+  width: 90px;
+  height: 35px;
+  background-color: #ddd;
+  font-size: 0.85rem;
+  color: black;
+  margin-left: 10px;
+}
+.disable-btn{
+  background-color: #808080;
+  cursor: not-allowed;
+}
+
+.status-container{
+  font-size: 0.85rem;
+}
+
+.status-dot{
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  float: left;
+  margin-top: 5px;
+  margin-right: 8px;
+
+}
+
+.status-dot.running {
+  background-color: #22c55e;
+  box-shadow: 0 0 8px #22c55e;
+}
+
+.status-dot.stopped {
+  background-color: #ef4444;
+}
+
+.status-dot.connected {
+  background-color:rgb(43, 149, 255);
+  box-shadow: 0 0 8px rgb(43, 149, 255);
+}
+
+.status-dot.disconnected {
+  background-color: #646464;
+}
+
+.label{
+  float: left;
+  margin-bottom: 2px;
+}
+
+.status-label{
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+}
+
+.temp{
+  clear: both;
+}
+
