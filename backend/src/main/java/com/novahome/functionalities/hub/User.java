@@ -24,29 +24,15 @@ public class User {
 
     public void register(byte type, String name, String pass){
         // The account type is being defined only ones.
-        if((type == 1 || type == 2) && this.accountType == 0){
-            this.accountType = type;
+        if(type == 1 || type == 2){
+            if(!accountService.accountNameValidation(name)){
+                accountService.insertNewAccount(type, name, pass);
+            }
         }
-        //The name is checked whether it is unique in database
-        if(!accountService.accountNameValidation(name)){
-            this.accountName = name;
-            this.accountPass = pass;
-            insertNewUser();
-            this.logged = true;
-        }
-    }
-
-    private void insertNewUser(){
-        Account newAccount = accountService.insertNewAccount(this.accountType, this.accountName, this.accountPass);
-
     }
 
     public void login(String name, String pass){
-        if(accountService.loginValidation(name, pass)){
-            this.logged = true;
-        }else{
-            this.logged = false;
-        }
+        this.logged = accountService.loginValidation(name, pass);
     }
 
     public void logout(){

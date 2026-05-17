@@ -38,6 +38,7 @@ build/
 ### Mac OS ###
 .DS_Store
 
+
 # Logs
 logs
 *.log
@@ -62,4 +63,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+
+backend/src/main/resources/application.properties
 
