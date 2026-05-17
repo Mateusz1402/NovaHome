@@ -168,3 +168,52 @@ input[type="range"]{
   clear: both;
 }
 
+.login-container {
+  max-width: 400px;
+  margin: 100px auto;
+  padding: 30px;
+  background: #1e1e1e;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  text-align: center;
+  color: #fff;
+}
+
+.login-form{
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.login-form input {
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #333;
+  background: #2b2b2b;
+  color: #fff;
+  font-size: 16px;
+}
+
+.btn-logout{
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-left: 85%;
+}
+
+.btn-logout:hover{
+  background-color: #c82333;
+}
+
+.header-controls {
+  display: flex;
+  width: 100%;
+  align-items: right;
+  gap: 20px;
+}
+
